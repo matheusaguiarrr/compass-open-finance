@@ -1,0 +1,106 @@
+{
+	"info": {
+		"_postman_id": "b1fda186-cc38-4a96-972e-53bcefcc5166",
+		"name": "nodejs-desafio1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "25469066",
+		"_collection_link": "https://compass-6042.postman.co/workspace/Compass-Desafio1~c92ff707-902f-4670-864f-19fe4f8904ba/collection/25469066-b1fda186-cc38-4a96-972e-53bcefcc5166?action=share&source=collection_link&creator=25469066"
+	},
+	"item": [
+		{
+			"name": "health-check",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Teste",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}health-check",
+					"host": [
+						"{{url}}health-check"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Teste",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "is-prime-number?number=4",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}is-prime-number?number=4",
+					"host": [
+						"{{url}}is-prime-number"
+					],
+					"query": [
+						{
+							"key": "number",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "is-prime-number/4",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{url}}is-prime-number/4"
+			},
+			"response": []
+		},
+		{
+			"name": "count",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"incrementBy\": 3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{url}}count"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "localhost::3000/",
+			"type": "default"
+		}
+	]
+}
