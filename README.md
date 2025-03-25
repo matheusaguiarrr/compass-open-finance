@@ -12,6 +12,6 @@ No curso de Git e GitHub, vi a parte fundamental e avançada sobre git e alguns 
 Foi visto também neste modulo da trilha os conventional commits.
 
 ## Sprints
-- [Sprint 1](./Sprint-1)
-- [Sprint 2](./Sprint-2)
-- [Sprint 3](./Sprint-3)
+- [Sprint 1 - 10/02 até 21/02](./Sprint-1)
+- [Sprint 2 - 24/02 até 07/03](./Sprint-2)
+- [Sprint 3 - 10/03 até 21/03](./Sprint-3)
