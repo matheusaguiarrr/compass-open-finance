@@ -12,11 +12,16 @@ export default [
 			'unused-imports': unusedImports,
 			'simple-import-sort': simpleImportSort,
 		},
+		languageOptions: {
+			globals: {
+				process: 'readonly',
+			},
+		},
 		rules: {
 			quotes: ['error', 'single'],
 			'class-methods-use-this': 'off',
 			'no-param-reassign': 'off',
-			'no-unused-vars': ['error', { argsIgnorePattern: 'next' }],
+			'no-unused-vars': ['error', { argsIgnorePattern: '^(_|next)$' }],
 			'unused-imports/no-unused-imports': 'error',
 			'unused-imports/no-unused-vars': [
 				'warn',
