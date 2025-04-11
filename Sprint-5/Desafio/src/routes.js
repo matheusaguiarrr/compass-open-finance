@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+import AccountController from './app/controllers/AccountController.js';
 import InstitutionController from './app/controllers/InstitutionController.js';
 import UserController from './app/controllers/UserController.js';
 
@@ -18,3 +19,8 @@ routes.post('/institutions', InstitutionController.store);
 routes.get('/institutions/:id', InstitutionController.show);
 routes.put('/institutions/:id', InstitutionController.update);
 routes.delete('/institutions/:id', InstitutionController.destroy);
+
+routes.get('/users/:id/accounts', AccountController.index);
+routes.post('/users/:id/accounts', AccountController.store);
+routes.get('/users/:id/accounts/:accountId', AccountController.show);
+routes.delete('/users/:id/accounts/:accountId', AccountController.destroy);

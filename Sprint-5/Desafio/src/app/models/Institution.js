@@ -2,7 +2,7 @@ import { DataTypes, Model } from 'sequelize';
 
 class Institution extends Model {
 	static init(sequelize) {
-		super.init(
+		return super.init(
 			{
 				name: {
 					type: DataTypes.STRING,
@@ -20,6 +20,12 @@ class Institution extends Model {
 				tableName: 'institutions',
 			},
 		);
+	}
+	static associate(models) {
+		this.hasMany(models.Account, {
+			foreignKey: 'institution_id',
+			as: 'accounts',
+		});
 	}
 }
 

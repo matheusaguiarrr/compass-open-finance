@@ -2,7 +2,7 @@ import { DataTypes, Model } from 'sequelize';
 
 class User extends Model {
 	static init(sequelize) {
-		super.init(
+		return super.init(
 			{
 				cpf: {
 					type: DataTypes.STRING,
@@ -43,6 +43,13 @@ class User extends Model {
 		remainder = (sum * 10) % 11;
 		if (remainder === 10 || remainder === 11) remainder = 0;
 		return remainder === parseInt(cpf.substring(10, 11));
+	}
+
+	static associate(models) {
+		this.hasMany(models.Account, {
+			foreignKey: 'user_id',
+			as: 'accounts',
+		});
 	}
 }
 
