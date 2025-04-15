@@ -1,3 +1,4 @@
+import normalizeText from 'normalize-text';
 import * as Yup from 'yup';
 
 import Account from '../models/Account.js';
@@ -121,6 +122,57 @@ class AccountController {
 			}
 			await account.destroy();
 			return res.sendStatus(204);
+		} catch (error) {
+			return res.status(500).json({
+				error: 'Erro interno do servidor',
+				details: error.message,
+			});
+		}
+	}
+
+	async showBalance(req, res) {
+		try {
+			const { id } = req.params;
+			const { institution } = req.query;
+			let dataInstitution = null;
+			if (institution !== undefined) {
+				const normalizedInstitution = normalizeText(institution);
+				dataInstitution = await Institution.findOne({
+					where: { normalized_name: normalizedInstitution },
+				});
+				if (dataInstitution === null) {
+					return res.status(404).json({ error: 'Instituição não encontrada' });
+				}
+			}
+			let totalBalance = 0;
+			if (!institution) {
+				const accounts = await Account.findAll({
+					where: {
+						user_id: id,
+					},
+				});
+				if (accounts.length === 0) {
+					return res.status(404).json({ error: 'Nenhuma conta encontrada' });
+				}
+				totalBalance = accounts
+					.reduce(
+						(prev, account) => parseFloat(prev) + parseFloat(account.balance),
+						0,
+					)
+					.toFixed(2);
+			} else {
+				const account = await Account.findOne({
+					where: {
+						user_id: id,
+						institution_id: dataInstitution.id,
+					},
+				});
+				if (account === null) {
+					return res.status(404).json({ error: 'Conta não encontrada' });
+				}
+				totalBalance = account.balance;
+			}
+			return res.json({ balance: parseFloat(totalBalance) });
 		} catch (error) {
 			return res.status(500).json({
 				error: 'Erro interno do servidor',

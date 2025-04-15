@@ -25,6 +25,7 @@ routes.get('/users/:id/accounts', AccountController.index);
 routes.post('/users/:id/accounts', AccountController.store);
 routes.get('/users/:id/accounts/:accountId', AccountController.show);
 routes.delete('/users/:id/accounts/:accountId', AccountController.destroy);
+routes.get('/users/:id/balance', AccountController.showBalance);
 
 routes.post('/users/:id/transactions', TransactionController.store);
 
