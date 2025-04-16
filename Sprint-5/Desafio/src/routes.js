@@ -11,6 +11,7 @@ routes.get('/ping', (req, res) => {
 	res.json({ message: 'pong' });
 });
 
+routes.get('/users', UserController.index);
 routes.post('/users', UserController.store);
 routes.get('/users/:id', UserController.show);
 routes.put('/users/:id', UserController.update);
