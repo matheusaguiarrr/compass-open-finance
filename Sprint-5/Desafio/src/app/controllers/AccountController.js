@@ -43,7 +43,9 @@ class AccountController {
 				institution_id: Yup.number()
 					.typeError('Por favor, informe um id válido.')
 					.required('O campo instituição é obrigatório.'),
-				balance: Yup.number().min(0, 'O saldo não pode ser negativo'),
+				balance: Yup.number()
+					.typeError('Por favor, informe um valor válido.')
+					.min(0, 'O saldo não pode ser negativo'),
 			});
 			await schema.validate(req.body, { abortEarly: false, strict: true });
 			const { id } = req.params;
@@ -135,6 +137,10 @@ class AccountController {
 			const { id } = req.params;
 			const { institution } = req.query;
 			let dataInstitution = null;
+			const user = await User.findByPk(id);
+			if (user === null) {
+				return res.status(404).json({ error: 'Usuário não encontrado' });
+			}
 			if (institution !== undefined) {
 				const normalizedInstitution = normalizeText(institution);
 				dataInstitution = await Institution.findOne({
@@ -152,7 +158,11 @@ class AccountController {
 					},
 				});
 				if (accounts.length === 0) {
-					return res.status(404).json({ error: 'Nenhuma conta encontrada' });
+					return res
+						.status(404)
+						.json({
+							error: 'O usuário informado não possui contas cadastradas',
+						});
 				}
 				totalBalance = accounts
 					.reduce(
@@ -168,7 +178,11 @@ class AccountController {
 					},
 				});
 				if (account === null) {
-					return res.status(404).json({ error: 'Conta não encontrada' });
+					return res
+						.status(404)
+						.json({
+							error: 'O usuário informado não possui conta cadastrada na instituição informada',
+						});
 				}
 				totalBalance = account.balance;
 			}
