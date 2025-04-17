@@ -11,6 +11,7 @@ export default [
 		plugins: {
 			'unused-imports': unusedImports,
 			'simple-import-sort': simpleImportSort,
+			jest: eslintPluginJest,
 		},
 		languageOptions: {
 			globals: {
@@ -34,6 +35,25 @@ export default [
 			],
 			'simple-import-sort/imports': 'error',
 			'simple-import-sort/exports': 'error',
+		},
+	},
+	{
+		files: ['**/__tests__/**/*.js', '**/*.spec.js', '**/*.test.js'],
+		plugins: {
+			jest: eslintPluginJest,
+		},
+		languageOptions: {
+			globals: {
+				jest: 'readonly',
+				describe: 'readonly',
+				it: 'readonly',
+				expect: 'readonly',
+				beforeEach: 'readonly',
+				afterEach: 'readonly',
+			},
+		},
+		rules: {
+			...eslintPluginJest.configs.recommended.rules,
 		},
 	},
 ];
