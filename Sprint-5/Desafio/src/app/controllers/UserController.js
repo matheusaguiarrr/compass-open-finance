@@ -13,7 +13,7 @@ class UserController {
 			return res.json({ users });
 		} catch (error) {
 			return res.status(500).json({
-				error: 'Erro ao atualizar usuário',
+				error: 'Erro ao listar todos os usuário',
 				details: error.message,
 			});
 		}
@@ -79,7 +79,7 @@ class UserController {
 			return res.json({ user });
 		} catch (error) {
 			return res.status(500).json({
-				error: 'Erro ao atualizar usuário',
+				error: 'Erro ao listar usuário',
 				details: error.message,
 			});
 		}
