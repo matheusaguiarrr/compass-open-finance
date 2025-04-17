@@ -110,6 +110,18 @@ Iniciando o servidor
     npm run dev
 ```
 
+## 📦 Importando as Collections (opcional)
+
+Para facilitar os testes da API, você pode importar as collections do Postman que estão disponíveis na raiz do projeto.
+As collections contêm exemplos prontos de requisições para todos os endpoints implementados neste desafio.
+
+Como importar:
+
+-   Abra o Postman (ou outra ferramenta de testes compatível).
+-   Clique em Import.
+-   Selecione a opção Upload Files e escolha o arquivo .json localizado na raiz do projeto (desafio-mini-banco-central.postman_collection.json).
+-   Após a importação, crie uma variável de ambiente chamada url com o endereço da API local (localhost:3000/)
+
 ## Tabela de Rotas da API
 
 | Método | Endpoint                       | Descrição                                | Parâmetros                                         |

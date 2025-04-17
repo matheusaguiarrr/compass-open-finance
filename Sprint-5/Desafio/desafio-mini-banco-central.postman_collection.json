@@ -1,0 +1,293 @@
+{
+	"info": {
+		"_postman_id": "ed00fc10-d70a-47be-bf5a-35dabb0c5c92",
+		"name": "desafio-banco-central",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "25469066",
+		"_collection_link": "https://compass-6042.postman.co/workspace/Compass-Desafio1~c92ff707-902f-4670-864f-19fe4f8904ba/collection/25469066-ed00fc10-d70a-47be-bf5a-35dabb0c5c92?action=share&source=collection_link&creator=25469066"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "{{url}}users",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cpf\": \"51702277100\",\r\n    \"name\": \"Francisco Daniel Moura\",\r\n    \"email\": \"franciscodanielmoura@icloub.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}users"
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}users/id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}users/1"
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}users/id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"João Riveiro\",\r\n    \"email\": \"riveiro@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}users/1"
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}users"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "institutions",
+			"item": [
+				{
+					"name": "{{url}} institutions",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Banco do Brasil\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}institutions"
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}institutions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}institutions"
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}institutions/1",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}institutions/1"
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}institutions/1",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Itaú\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}institutions/1"
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}institutions/1",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}institutions/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "accounts",
+			"item": [
+				{
+					"name": "{{url}}users/1/accounts",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"institution_id\": 2\r\n    // \"balance\": 1000.00 - Opcional (Possui Default Value)\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}users/1/accounts"
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}users/1/accounts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}users/1/accounts"
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}users/1/accounts/7",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}users/1/accounts/1"
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}users/1/accounts/7",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}users/1/accounts/1"
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}users/1/balance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}users/1/balance"
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}users/2/balance?institution=Itaú",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}users/1/balance?institution=Itaú",
+							"host": [
+								"{{url}}users"
+							],
+							"path": [
+								"1",
+								"balance"
+							],
+							"query": [
+								{
+									"key": "institution",
+									"value": "Itaú"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "transactions",
+			"item": [
+				{
+					"name": "{{url}}users/1/transactions",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"institution_id\": 2,\r\n    \"value\": 250.00,\r\n    \"type\": \"credit\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}users/1/transactions"
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}users/1/extract",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}users/1/extract"
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}users/1/extract?institution=Itaú",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}users/1/extract?institution=Banco do Brasil",
+							"host": [
+								"{{url}}users"
+							],
+							"path": [
+								"1",
+								"extract"
+							],
+							"query": [
+								{
+									"key": "institution",
+									"value": "Banco do Brasil"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "{{url}}ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{url}}ping"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "localhost:3000/",
+			"type": "default"
+		}
+	]
+}
