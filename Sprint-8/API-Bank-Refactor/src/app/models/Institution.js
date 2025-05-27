@@ -14,6 +14,10 @@ class Institution extends Model {
 					allowNull: false,
 					unique: true,
 				},
+				agency_code: {
+					type: DataTypes.STRING,
+					allowNull: true,
+				},
 			},
 			{
 				sequelize,

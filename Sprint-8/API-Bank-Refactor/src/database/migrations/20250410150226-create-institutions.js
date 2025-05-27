@@ -20,6 +20,10 @@ export default {
 				allowNull: false,
 				unique: true,
 			},
+			agency_code: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
 			created_at: {
 				type: Sequelize.DATE,
 				allowNull: false,

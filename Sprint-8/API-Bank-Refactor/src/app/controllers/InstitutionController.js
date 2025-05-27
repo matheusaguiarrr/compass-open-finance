@@ -41,9 +41,14 @@ class InstitutionController {
 					.status(422)
 					.json({ error: 'Já existe uma instituição com esse nome' });
 			}
+			const agencyCode = String(Math.floor(Math.random() * 9999) + 1).padStart(
+				4,
+				'0',
+			);
 			const institution = await Institution.create({
 				name,
 				normalized_name: normalizedName,
+				agency_code: agencyCode,
 			});
 			return res.status(201).json({ institution });
 		} catch (error) {
