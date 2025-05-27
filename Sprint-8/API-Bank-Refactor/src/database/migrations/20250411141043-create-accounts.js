@@ -24,6 +24,15 @@ export default {
 				onDelete: 'CASCADE',
 				allowNull: false,
 			},
+			agency: {
+				type: Sequelize.STRING,
+				allowNull: false,
+			},
+			account: {
+				type: Sequelize.STRING,
+				allowNull: false,
+				unique: true,
+			},
 			balance: {
 				type: Sequelize.DECIMAL(10, 2),
 				allowNull: false,

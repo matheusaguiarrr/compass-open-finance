@@ -66,9 +66,12 @@ class AccountController {
 					error: 'O usuário já possui uma conta na instituição informada',
 				});
 			}
+			const accountNumber = Account.generateAccountNumber();
 			const account = await Account.create({
 				user_id: id,
 				...req.body,
+				agency: institution.agency_code,
+				account: accountNumber,
 			});
 			return res.status(201).json({ account });
 		} catch (error) {
@@ -158,11 +161,9 @@ class AccountController {
 					},
 				});
 				if (accounts.length === 0) {
-					return res
-						.status(404)
-						.json({
-							error: 'O usuário informado não possui contas cadastradas',
-						});
+					return res.status(404).json({
+						error: 'O usuário informado não possui contas cadastradas',
+					});
 				}
 				totalBalance = accounts
 					.reduce(
@@ -178,11 +179,9 @@ class AccountController {
 					},
 				});
 				if (account === null) {
-					return res
-						.status(404)
-						.json({
-							error: 'O usuário informado não possui conta cadastrada na instituição informada',
-						});
+					return res.status(404).json({
+						error: 'O usuário informado não possui conta cadastrada na instituição informada',
+					});
 				}
 				totalBalance = account.balance;
 			}

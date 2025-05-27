@@ -18,6 +18,15 @@ class Account extends Model {
 					onDelete: 'CASCADE',
 					allowNull: false,
 				},
+				agency: {
+					type: DataTypes.STRING,
+					allowNull: false,
+				},
+				account: {
+					type: DataTypes.STRING,
+					allowNull: false,
+					unique: true,
+				},
 				balance: {
 					type: DataTypes.DECIMAL(10, 2),
 					allowNull: false,
@@ -39,6 +48,12 @@ class Account extends Model {
 			foreignKey: 'user_id',
 			as: 'user',
 		});
+	}
+
+	static generateAccountNumber() {
+		const main = Math.floor(10000000 + Math.random() * 90000000);
+		const suffix = Math.floor(10 + Math.random() * 90);
+		return `${main}-${suffix}`;
 	}
 }
 
