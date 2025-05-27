@@ -20,3 +20,6 @@ Foi visto também neste modulo da trilha os conventional commits.
 -   [Sprint 3 - 10/03 até 21/03](./Sprint-3)
 -   [Sprint 4 - 24/03 até 04/04](./Sprint-4)
 -   [Sprint 5 - 07/04 até 18/04](./Sprint-5)
+-   [Sprint 6 - 21/04 até 02/05](./Sprint-6)
+-   [Sprint 7 - 05/05 até 16/05](./Sprint-7)
+-   [Sprint 8 - 19/05 até 30/05](./Sprint-8)
