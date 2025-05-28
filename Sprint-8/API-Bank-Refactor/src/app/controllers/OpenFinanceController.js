@@ -4,6 +4,7 @@ import Account from '../models/Account.js';
 import Institution from '../models/Institution.js';
 import User from '../models/User.js';
 import OpenFinance from '../models/OpenFinance.js';
+import Transaction from '../models/Transaction.js';
 
 class OpenFinanceController {
 	async store(req, res) {
@@ -165,6 +166,93 @@ class OpenFinanceController {
 		} catch (error) {
 			return res.status(500).json({
 				error: 'Erro ao listar compartilhamento',
+				details: error?.message ? error?.message : error,
+			});
+		}
+	}
+
+	async storeTransaction(req, res) {
+		try {
+			const schema = Yup.object().shape({
+				account: Yup.string()
+					.required('O campo conta é obrigatório.')
+					.max(11, 'A conta deve ter no máximo 11 caracteres.'),
+				agency: Yup.string()
+					.required('O campo agência é obrigatório.')
+					.max(4, 'A agência deve ter no máximo 4 caracteres.'),
+				amount: Yup.number()
+					.required('O campo valor é obrigatório.')
+					.min(0.01, 'O valor deve ser maior que zero.')
+					.typeError('O valor deve ser um número.'),
+			});
+			const validatedData = await schema.validate(req.body, { abortEarly: false });
+			let { account, agency, amount } = validatedData;
+			const accountData = await Account.findOne({
+				where: { account, agency },
+				include: [
+					{
+						model: Institution,
+						as: 'institution',
+						attributes: ['id', 'name'],
+					},
+					{
+						model: User,
+						as: 'user',
+						attributes: ['id', 'name', 'email'],
+					},
+				],
+			});
+			if (!accountData) {
+				return res.status(404).json({ error: 'Conta não encontrada' });
+			}
+			const openFinanceData = await OpenFinance.findOne({
+				where: { account_id: accountData.id },
+			});
+			if (!openFinanceData) {
+				return res.status(404).json({ error: 'Compartilhamento não encontrado' });
+			}
+			if (!openFinanceData.status) {
+				return res.status(403).json({ error: 'Compartilhamento não autorizado' });
+			}
+			if (
+				openFinanceData.expiration_date &&
+				new Date() > new Date(openFinanceData.expiration_date)
+			) {
+				return res.status(403).json({ error: 'Compartilhamento expirado' });
+			}
+			if (accountData.balance < amount) {
+				return res
+					.status(422)
+					.json({ error: 'Saldo insuficiente para realizar a transação' });
+			}
+			const transaction = await Transaction.create({
+				account_id: accountData.id,
+				value: amount,
+				type: 'debit',
+			});
+			const parsedBalance = parseFloat(accountData.balance);
+			const parsedValue = parseFloat(amount);
+			const newBalance = parseFloat((parsedBalance - parsedValue).toFixed(2));
+			await accountData.update({ balance: newBalance });
+			return res.json({
+				success: true,
+				message: 'Transação feita com sucesso',
+				data: {
+					balance: accountData.balance,
+				},
+			});
+		} catch (error) {
+			if (error instanceof Yup.ValidationError) {
+				return res.status(422).json({
+					error: 'Erro na validação',
+					messages: error.inner.map((error) => ({
+						field: error.path,
+						message: error.message,
+					})),
+				});
+			}
+			return res.status(500).json({
+				error: 'Erro ao registrar transação',
 				details: error?.message ? error?.message : error,
 			});
 		}

@@ -35,3 +35,4 @@ routes.get('/users/:id/extract', TransactionController.index);
 
 routes.post('/openfinance', OpenFinanceController.store);
 routes.get('/openfinance', OpenFinanceController.show);
+routes.post('/openfinance/transaction', OpenFinanceController.storeTransaction);
