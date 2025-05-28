@@ -4,6 +4,7 @@ import AccountController from './app/controllers/AccountController.js';
 import InstitutionController from './app/controllers/InstitutionController.js';
 import TransactionController from './app/controllers/TransactionController.js';
 import UserController from './app/controllers/UserController.js';
+import OpenFinanceController from './app/controllers/OpenFinanceController.js';
 
 export const routes = new Router();
 
@@ -31,3 +32,5 @@ routes.get('/users/:id/balance', AccountController.showBalance);
 routes.post('/users/:id/transactions', TransactionController.store);
 
 routes.get('/users/:id/extract', TransactionController.index);
+
+routes.post('/openfinance', OpenFinanceController.store);
