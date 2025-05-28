@@ -113,6 +113,62 @@ class OpenFinanceController {
 			});
 		}
 	}
+
+	async show(req, res) {
+		try {
+			const { account, agency } = req.query;
+			if (!account || !agency) {
+				return res
+					.status(400)
+					.json({ error: 'A conta e agência são obrigatórios' });
+			}
+			const accountData = await Account.findOne({
+				where: { account, agency },
+				include: [
+					{
+						model: Institution,
+						as: 'institution',
+						attributes: ['id', 'name'],
+					},
+					{
+						model: User,
+						as: 'user',
+						attributes: ['id', 'name', 'email'],
+					},
+				],
+			});
+			if (!accountData) {
+				return res.status(404).json({ error: 'Conta não encontrada' });
+			}
+			const openFinanceData = await OpenFinance.findOne({
+				where: { account_id: accountData.id },
+				attributes: ['id', 'account_id', 'status', 'expiration_date'],
+			});
+			if (!openFinanceData) {
+				return res.status(404).json({ error: 'Compartilhamento não encontrado' });
+			}
+			if (!openFinanceData.status) {
+				return res.status(403).json({ error: 'Compartilhamento não autorizado' });
+			}
+			if (
+				openFinanceData.expiration_date &&
+				new Date() > new Date(openFinanceData.expiration_date)
+			) {
+				return res.status(403).json({ error: 'Compartilhamento expirado' });
+			}
+			return res.json({
+				success: true,
+				data: {
+					balance: accountData.balance,
+				},
+			});
+		} catch (error) {
+			return res.status(500).json({
+				error: 'Erro ao listar compartilhamento',
+				details: error?.message ? error?.message : error,
+			});
+		}
+	}
 }
 
 export default new OpenFinanceController();
