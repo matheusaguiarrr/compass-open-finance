@@ -74,7 +74,7 @@ class OpenFinanceController {
 			}
 			const account = user.accounts[0];
 			const existsOpenFinance = await OpenFinance.findOne({
-				where: { account_id: account.id },
+				where: { account_id: account.id, status: true },
 			});
 			if (existsOpenFinance) {
 				return res.status(422).json({
@@ -142,7 +142,7 @@ class OpenFinanceController {
 				return res.status(404).json({ error: 'Conta não encontrada' });
 			}
 			const openFinanceData = await OpenFinance.findOne({
-				where: { account_id: accountData.id },
+				where: { account_id: accountData.id, status: true },
 				attributes: ['id', 'account_id', 'status', 'expiration_date'],
 			});
 			if (!openFinanceData) {
@@ -166,6 +166,126 @@ class OpenFinanceController {
 		} catch (error) {
 			return res.status(500).json({
 				error: 'Erro ao listar compartilhamento',
+				details: error?.message ? error?.message : error,
+			});
+		}
+	}
+
+	async update(req, res) {
+		try {
+			const { action } = req.params;
+			const schema = Yup.object().shape({
+				cpf: Yup.string()
+					.required('O campo CPF é obrigatório.')
+					.max(
+						11,
+						'Por favor, digite somente os números sem pontuação. Exemplo: 00000000000',
+					)
+					.test(
+						'valid-cpf',
+						'CPF inválido. Verifique os números informados.',
+						(value) => {
+							if (!value) return false;
+							const cpf = value.replace(/\D/g, '');
+							return User.isValidCPF(cpf);
+						},
+					),
+				expirationDate: Yup.date()
+					.when('expiration', {
+						is: true,
+						then: (schema) =>
+							schema.required('A data de expiração é obrigatória.'),
+						otherwise: (schema) => schema.notRequired(),
+					})
+					.min(new Date(), 'A data de expiração deve ser futura.'),
+				expiration: Yup.boolean()
+					.when('authorization', {
+						is: true,
+						then: (schema) =>
+							schema.required('O campo de expiração é obrigatório.'),
+						otherwise: (schema) => schema.notRequired(),
+					})
+					.oneOf(
+						[true, false],
+						'O campo de expiração deve ser verdadeiro ou falso.',
+					),
+				authorization: Yup.boolean()
+					.required('O campo de autorização é obrigatório.')
+					.oneOf(
+						[true, false],
+						'O campo de autorização deve ser verdadeiro ou falso.',
+					),
+			});
+			const validatedData = await schema.validate(req.body, { abortEarly: false });
+			let { cpf, expirationDate, expiration, authorization } = validatedData;
+			cpf = cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
+			const user = await User.findOne({
+				where: { cpf },
+				include: [
+					{
+						model: Account,
+						as: 'accounts',
+						include: [
+							{
+								model: Institution,
+								as: 'institution',
+							},
+						],
+					},
+				],
+			});
+			if (!user) {
+				return res.status(404).json({ error: 'Usuário não encontrado' });
+			}
+			if (!user?.accounts || user?.accounts?.length === 0) {
+				return res.status(404).json({
+					error: 'Usuário não possui contas cadastradas',
+				});
+			}
+			const account = user.accounts[0];
+			const openFinance = await OpenFinance.findOne({
+				where: { account_id: account.id, status: true },
+			});
+			if (!openFinance) {
+				return res.status(404).json({ error: 'Compartilhamento não encontrado' });
+			}
+			if (action === 'update') {
+				openFinance.status = authorization;
+				openFinance.expiration_date = expiration ? expirationDate : null;
+				await openFinance.save();
+				return res.json({
+					success: true,
+					message: 'Autorização atualizado com sucesso',
+					data: {
+						account: {
+							institutionName: account.institution.name,
+							account: account.account,
+							agency: account.agency,
+						},
+					},
+				});
+			}
+			if (action === 'revoke') {
+				openFinance.status = false;
+				openFinance.expiration_date = null;
+				await openFinance.save();
+				return res.json({
+					success: true,
+					message: 'Autorização revogado com sucesso',
+				});
+			}
+		} catch (error) {
+			if (error instanceof Yup.ValidationError) {
+				return res.status(422).json({
+					error: 'Erro na validação',
+					messages: error.inner.map((error) => ({
+						field: error.path,
+						message: error.message,
+					})),
+				});
+			}
+			return res.status(500).json({
+				error: 'Erro ao atualizar compartilhamento',
 				details: error?.message ? error?.message : error,
 			});
 		}
